@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Clicker Web App</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, rgba(0, 0, 255, 0.15), rgba(128, 0, 128, 0.15));
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        .score-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .score-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .score-display {
+            font-size: 64px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .click-button {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background-color: #007aff;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 122, 255, 0.3);
+            transition: transform 0.1s ease;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .click-button:active {
+            transform: scale(0.92);
+        }
+
+        .shop-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 0 30px 40px 30px;
+            text-align: center;
+        }
+
+        .power-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .upgrade-button {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            background-color: #ccc;
+            color: #777;
+            cursor: not-allowed;
+            display: flex;
+            justify-content: space-between;
+            transition: background-color 0.2s ease;
+        }
+
+        .upgrade-button.active {
+            background-color: #ff9500;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Score Display -->
+    <div class="score-container">
+        <div class="score-label">Total Clicks</div>
+        <div class="score-display" id="score">0</div>
+    </div>
+
+    <!-- Main Clicker Button -->
+    <button class="click-button" id="clickerBtn">👇 CLICK</button>
+
+    <!-- Upgrade Shop Area -->
+    <div class="shop-container">
+        <div class="power-label" id="powerLabel">Current Power: +1 per click</div>
+        <button class="upgrade-button" id="upgradeBtn" disabled>
+            <span>🚀 Upgrade Click Power</span>
+            <span id="costLabel">Cost: 10</span>
+        </button>
+    </div>
+
+    <script>
+        // Game State Variables
+        let score = 0;
+        let clickPower = 1;
+        let upgradeCost = 10;
+
+        // DOM Elements
+        const scoreDisplay = document.getElementById('score');
+        const clickerBtn = document.getElementById('clickerBtn');
+        const powerLabel = document.getElementById('powerLabel');
+        const upgradeBtn = document.getElementById('upgradeBtn');
+        const costLabel = document.getElementById('costLabel');
+
+        // Main Click Logic
+        clickerBtn.addEventListener('click', () => {
+            score += clickPower;
+            updateUI();
+        });
+
+        // Upgrade Purchase Logic
+        upgradeBtn.addEventListener('click', () => {
+            if (score >= upgradeCost) {
+                score -= upgradeCost;
+                clickPower += 1;
+                upgradeCost = Math.floor(upgradeCost * 1.5);
+                updateUI();
+            }
+        });
+
+        // Interface Update Engine
+        function updateUI() {
+            scoreDisplay.textContent = score;
+            powerLabel.textContent = `Current Power: +${clickPower} per click`;
+            costLabel.textContent = `Cost: ${upgradeCost}`;
+
+            if (score >= upgradeCost) {
+                upgradeBtn.classList.add('active');
+                upgradeBtn.disabled = false;
+            } else {
+                upgradeBtn.classList.remove('active');
+                upgradeBtn.disabled = true;
+            }
+        }
+    </script>
+</body>
+</html>
